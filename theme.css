@@ -1,0 +1,65 @@
+div, span
+{
+    font-family: monospace;
+}
+
+.head
+{
+    font-size: 36;
+    color: burlywood;
+}
+
+.content
+{
+    font-size: 24;
+    color: cadetblue;
+}
+
+.text
+{
+    font-size: 20;
+}
+
+.add {
+    color: crimson;
+}
+
+#username {
+    font-family: sans-serif;
+    color: coral;
+    font-size: 48;
+}
+
+#name {
+    border: black solid .50px;
+    display: inline;
+    padding-left: 5px;
+    padding-right: 5px;
+}
+
+body {
+    background-color: aliceblue;
+}
+
+
+#proftitle, #profpost, #albumtitle {
+    font-size: 16px;
+}
+
+#SECThead {
+    width: 75%;
+    background-color: gray;
+    top: 5px;
+    position: relative;
+}
+
+#home {
+    margin-bottom: 10px;
+}
+
+
+
+
+
+
+

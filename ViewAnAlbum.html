@@ -1,0 +1,47 @@
+<html>
+    <head>
+        <link rel="stylesheet" href="theme.css">
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js">
+        </script>
+		<script>
+        var root = 'https://jsonplaceholder.typicode.com';
+		$(document).ready(function() {
+            var ID = window.location.hash.substring(1);
+            var loadNumber = 0;
+            var last = false;
+            var temp = 0;
+            $.ajax({
+                url: root + '/photos',
+                method: 'GET'
+            }).then(function(data) {
+                var myAlbums = data;
+                var ctr1;
+                var ctr2;
+                for (ctr1 =0; ctr1 < myAlbums.length; ctr1++) {
+                    if (myAlbums[ctr1].albumId == ID) {
+                        $("#thumbnails").clone().appendTo("body").html("<span id = '" + myAlbums[ctr1].id + "'><img src='" + myAlbums[ctr1].thumbnailUrl + "'/></span>");
+                        $("#pic").clone().appendTo("body").html("<span id = '" + myAlbums[ctr1].id + "'><p class = '" + myAlbums[ctr1].id + "'><img src='" + myAlbums[ctr1].url + "'/></span>");
+                        $("#desc").clone().appendTo("body").html("<p class = '" + myAlbums[ctr1].id + "'>" + myAlbums[ctr1].title + "</p>");
+                        $("p").hide();
+                    }
+                }
+                $("span").click(function () {
+                    var a = this.id;
+                    $("."+a).fadeToggle(50);
+                    $("#"+a).fadeToggle(50);
+                    //$("#"+a).fadeToggle(50);
+                    console.log(a);
+                    //$("#p"+a).fadeToggle(50);
+                });
+            });
+        });
+		</script>
+		
+    </head>
+    <body>
+        <button id = "home">Back to User Profile</button>
+		<div class = "content" id = "thumbnails"></div>
+        <div class = "content" id = "pic"></div>
+        <div class = "text" id = "desc"></div>
+    </body>
+</html>

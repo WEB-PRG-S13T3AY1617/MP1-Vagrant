@@ -1,0 +1,118 @@
+<html>
+    <head>
+        <link rel="stylesheet" href="theme.css">
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js">
+        </script>
+        <script>
+        var root = 'https://jsonplaceholder.typicode.com';
+            
+        function countInArray(array, what) {
+            var count = 0;
+            for (var i = 0; i < array.length; i++) {
+                if (array[i] === what) {
+                    count++;
+                }
+            }
+            return count;
+        }
+        $(document).ready(function() {
+            var loadNumber = 0;
+            var last = false;
+            var temp = 0;
+            var ctr3 = 0;
+            function showPosts() {
+                $.ajax({
+                    url: root + '/posts',
+                    method: 'GET'
+                }).then(function(data) {
+                    var myPosts = data;
+                    $.ajax({
+                        url: root + '/users',
+                        method: 'GET'
+                    }).then(function(data1) {
+                        var postUser = data1;
+                        var ctr1, ctr2, ctr4;
+                        
+                        var prevUser;
+                        for (ctr2 = myPosts.length - 1; ctr2 >= 0; ) {
+                            prevUser = myPosts[ctr2].userId;
+                            temp = 0;
+                            var end = false;
+                            for (ctr4 = ctr2; end === false; ) {
+                                ctr4--;
+                                temp++;
+                                if (ctr4 === 0) {
+                                    end = true;
+                                }
+                            }
+                            
+                            while (temp < loadNumber) {
+                                while (myPosts[ctr2].userId === prevUser) {
+                                    ctr2--;
+                                }
+                                prevUser = myPosts[ctr2].userId
+                                end = false
+                                for (ctr4 = ctr2; end === false; ) {
+                                    ctr4--;
+                                    temp++;
+                                    if (ctr4 === 0) {
+                                        end = true;
+                                    }
+                                }
+                            }
+                            ctr2 -= loadNumber;
+                            console.log(ctr2);
+                            $("#title").clone().appendTo("body").html("<p>" + myPosts[ctr2].title + "</p>");
+                            $("#post").clone().appendTo("body").html("<p>" + myPosts[ctr2].body + "</p>");
+                            $("#poster").clone().appendTo("body").html("<a href = 'ViewUserProfile.html#" + myPosts[ctr2].userId + "' id = 'user'>" + postUser[myPosts[ctr2].userId - 1].username + "</a>");
+                            ctr3++;
+                            
+                            //console.log(myPosts[ctr2].id);
+                            if (ctr3 === myPosts.length) {
+                                last = true;
+                                ctr2 = -1;
+                            }
+                            else {
+                                while (myPosts[ctr2].userId === prevUser) {
+                                    ctr2--;
+                                }
+                                
+                            }
+                        }
+                    });
+                    
+                });
+            }
+            showPosts();
+            
+            $("#more").click(function() {
+                $("div").empty();
+                if (last === false) {
+                    loadNumber++;
+                    showPosts();
+                    
+                }
+                else if (last === true) {
+                    alert("Reached end of posts! Click OK to redirect to first page.");
+                    last = false;
+                    loadNumber = 0;
+                    temp = 0;
+                    location.reload();
+                }
+            });
+            
+        });
+        
+        
+        </script>
+    </head>
+    <body>
+        <div class = "head" id = "title">
+        </div>
+        <div class = "content" id = "post">
+        </div>
+        <div class = "text" id = "poster">
+        </div>
+        <button id = "more">Load more posts</button>
+    </body>
+</html>

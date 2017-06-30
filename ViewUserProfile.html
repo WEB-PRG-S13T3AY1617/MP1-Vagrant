@@ -1,0 +1,186 @@
+<html>
+    <head>
+        <link rel="stylesheet" href="theme.css">
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+        <script>
+        var root = 'https://jsonplaceholder.typicode.com';
+        $(document).ready(function() {
+            var ctr1, ctr2, ctr5;
+            var ID = window.location.hash.substring(1);
+            $("#city").prepend("<a href = 'ViewUserProfile.html#" + ID + "' id = 'address'></a>");
+            $("#contact").prepend("<a href = 'ViewUserProfile.html#" + ID + "' id = 'contactinfo'>Contact</a>");
+            //$("#title").clone().appendTo("body").html("<a href = >" + myPosts[ctr1].title + "</p>");
+            $.ajax({
+                url: root + '/users',
+                method: 'GET'
+            }).then(function(data) {
+                var myUsers = data;
+                $("#name").html(myUsers[ID-1].name);
+                $("#username").html(myUsers[ID-1].username);
+                $("#email").html(myUsers[ID-1].email);
+                $("#address").html(myUsers[ID-1].address.city);
+                $("#address").click(function() {
+                     //$("#city").html("<a href = 'ViewUserProfile.html#" + ID + "' id = 'address'></a>");
+                    
+                    $("#addressmoreinfo").hide().text(myUsers[ID-1].address.street + " " + myUsers[ID-1].address.suite + ", " + myUsers[ID-1].address.city + ". ZIP: " + myUsers[ID-1].address.zipcode);
+                    $("#addressmoreinfo").fadeIn(500);
+                    $("#addressmoreinfo").delay(3000);
+                    $("#addressmoreinfo").fadeOut(500);
+                });
+                $("#contactinfo").click(function() {
+                    $("#phone").html(myUsers[ID-1].phone);
+                    $("#website").html(myUsers[ID-1].website);
+                    $("#cname").html(myUsers[ID-1].company.name);
+                    $("#ccp").html(myUsers[ID-1].company.catchPhrase);
+                    $("#cbs").html(myUsers[ID-1].company.bs);
+                    $("#addtlcontact").hide();
+                    $("#addtlcontact").fadeIn(500);
+                    $("#addtlcontact").delay(5000);
+                    $("#addtlcontact").fadeOut();
+                    
+                })
+                $.ajax({
+                    url: root + '/posts',
+                    method: 'GET'
+                }).then(function(data) {
+                    var myPosts = data;
+                    var ctr4;
+                    var count = 0;
+                    var posted = 0;
+                    
+                    for (ctr4 = 0; ctr4 < myPosts.length; ctr4++) {
+                        if (myPosts[ctr4].userId == ID) {
+                            count++;
+                        }
+                    }
+                    console.log(count);
+                    ctr1 = myPosts.length - 1;
+                    for (ctr2 = 0; ctr2 < 3 ; ctr2++) {
+                        if (myPosts[ctr1].userId == ID) {
+                            $("#proftitle").clone().appendTo("#posts").html("<p>" + myPosts[ctr1].title + "</p>");
+                            $("#profpost").clone().appendTo("#posts").html("<p>" + myPosts[ctr1].body + "</p>");
+                            console.log(myPosts[ctr1].id);
+                            posted++;
+                        }
+                        else {
+                            ctr2--;
+                        }
+                        ctr1--;    
+                        
+                    }
+                    $("#addtlposts").click(function() {
+                    
+                    for (ctr2 = 0; ctr2 < 3 ; ctr2++) {   
+                        if (myPosts[ctr1].userId == ID) {
+                            $("#proftitle").clone().appendTo("#posts").html("<p>" + myPosts[ctr1].title + "</p>");
+                            $("#profpost").clone().appendTo("#posts").html("<p>" + myPosts[ctr1].body + "</p>");
+                            posted++;
+                            console.log(myPosts[ctr1].id);
+                            if (posted == count) {
+                               ctr2 = 999;
+                               $("#addtlposts").remove();
+                            }
+                            //$("a").empty();
+                        }
+                        else {
+                            ctr2--;
+                        }
+                        ctr1--;  
+                        if (posted == count) {
+                            ctr2 = 3;
+                        }
+                    }
+                        
+                    });    
+                });
+                $.ajax({
+                    url: root + '/albums',
+                    method: 'GET'
+                }).then(function(data) {
+                    var albumed = 0;
+                    var myAlbums = data;
+                    var ctr4;
+                    var counts = 0;
+                    for (ctr4 = 0; ctr4 < myAlbums.length; ctr4++) {
+                        if (myAlbums[ctr4].userId == ID) {
+                            counts++;
+                        }
+                    }
+                    ctr5 = myAlbums.length - 1;
+                    for (ctr2 = 0; ctr2 < 3 ; ctr2++) {
+                        if (myAlbums[ctr5].userId == ID) {
+                            $("#albumtitle").clone().appendTo("#albums").html("<a href = 'ViewAnAlbum.html#" + myAlbums[ctr5].id + "' id = 'albumlink'>" + myAlbums[ctr5].title + "</a>");
+                            
+                            albumed++;
+                            if (albumed == counts) {
+                               ctr2 = 999;
+                               $("#addtlalbums").remove();
+                            }
+                        }
+                        else {
+                            ctr2--;
+                        }
+                        ctr5--;
+                        
+                    }
+                    $("#addtlalbums").click(function() {
+                    for (ctr2 = 0; ctr2 < 3 ; ctr2++) {   
+                        if (myAlbums[ctr5].userId == ID) {
+                            $("#albumtitle").clone().appendTo("#albums").html("<a href = 'ViewAnAlbum.html#" + myAlbums[ctr5].id + "' id = 'albumlink'>" + myAlbums[ctr5].title + "</a>");
+                            albumed++;
+                            if (albumed == counts) {
+                               ctr2 = 999;
+                               $("#addtlalbums").remove();
+                            }
+                            
+                            //$("a").empty();
+                        }
+                        else {
+                            ctr2--;
+                        }
+                        ctr5--;  
+                    }
+                        
+                    });    
+                });
+                
+                
+            });
+            
+        });
+        </script>
+    </head>
+    <body>
+        <input id = "home" type="button" onclick="location.href='ViewAllPosts.html';" value="Back To All Posts" />
+        <br>
+        <div class = "head" id = "name"></div>
+        <div class = "head" id = "username"></div>
+        <div class = "content" id = "email"></div>
+        <div class = "content" id = "city">
+            <div class = "add" id = "addressmoreinfo"></div>
+        </div>
+        <div class = "content" id = "contact">
+            <div class = "add" id = "addtlcontact">
+                <div id = "phone"></div>
+                <div id = "website"></div>
+                <div id = "company">
+                    <div id = "cname"></div>
+                    <div id = "ccp"></div>
+                    <div id = "cbs"></div>
+                </div>
+            </div>
+        </div>
+        
+        <div id = "posts">
+            <div class = "head" id = "SECThead">POSTS</div>
+            <div class = "head" id = "proftitle"></div>
+            <div class = "content" id = "profpost"></div>
+        </div>
+        <button id = "addtlposts">See more posts</button>
+        <div id = "albums">
+            <div class = "head" id = "SECThead">ALBUMS</div>
+            <div class = "head" id = "albumtitle"></div>
+        </div>
+        <button id = "addtlalbums">See more albums</button>
+    </body>
+</html>

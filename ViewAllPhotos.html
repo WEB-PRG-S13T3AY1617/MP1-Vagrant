@@ -1,0 +1,126 @@
+<html>
+    <head>
+        <link rel="stylesheet" href="theme.css">
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js">
+        </script>
+        <script>
+        var root = 'https://jsonplaceholder.typicode.com';
+        $(document).ready(function() {
+            $.ajax({
+                url: root + '/photos',
+                method: 'GET'
+            }).then(function(data) {
+                var myPhotos = data; // get All photos
+                $.ajax({
+                    url: root + '/albums',
+                    method: 'GET'
+                }).then(function(data1) {
+                    var myAlbums = data1; // get list of albums
+					var ctr;
+                    $.ajax({
+						url: root + '/users',
+						method: 'GET'
+					}).then(function(data2) {
+						var postUser = data2;
+						
+						//for (ctr = 0; ctr < myPhotos.length; ctr++) {
+                        for (ctr = 0; ctr < 10; ctr++) {
+						
+						//$("#title").text(myPhotos[ctr].title);
+						//$("#body").text(postUser[myAlbums[myPhotos[ctr].albumId - 1].userId -1].username);
+						//$("#user").text(myAlbums[myPhotos[ctr].albumId - 1].title);
+						
+                        //$("#title").text(myPosts[ctr].title); // add to Div 
+                        //$("#body").text(myPosts[ctr].body); // add to Div
+                        //$("#user").text(postUser[myPosts[ctr].userId - 1].username); // add to Div
+                        var imageSrc = myPhotos[ctr].thumbnailUrl;
+						var img = new Image();
+						img.src = imageSrc;
+						
+						$("#thumbnail").clone().appendTo("body").html(img);
+						$("#title").clone().appendTo("body").html("<h1 id = 'photoTitle'>" + myPhotos[ctr].title + "</h1>");
+						$("#body").clone().appendTo("body").html("<a href = 'ViewUserProfile.html' id = 'user'>" + postUser[myAlbums[myPhotos[ctr].albumId - 1].userId -1].username + "</a>"); 
+						$("#user").clone().appendTo("body").html("<a href = 'ViewAlbum.html' id = 'album'>" + myAlbums[myPhotos[ctr].albumId - 1].title+ "</a>");
+						
+                        //$("#title").clone().appendTo("body"); // clone Div
+                        //$("#body").clone().appendTo("body"); // clone Div
+                        //$("#user").clone().appendTo("body"); // clone Div
+
+						}
+						
+					});
+					    
+                    });
+                });
+                
+            });
+        
+        </script>
+		<script>
+		
+		function loadMore(batchNumber){
+		var batchNumber = 1;
+        var root = 'https://jsonplaceholder.typicode.com';
+            $.ajax({
+                url: root + '/photos',
+                method: 'GET'
+            }).then(function(data) {
+                var myPhotos = data; // get All photos
+                $.ajax({
+                    url: root + '/albums',
+                    method: 'GET'
+                }).then(function(data1) {
+                    var myAlbums = data1; // get list of albums
+					var ctr;
+                    $.ajax({
+						url: root + '/users',
+						method: 'GET'
+					}).then(function(data2) {
+						var postUser = data2; // get list of Users
+						console.log(myPhotos.length);
+						console.log((batchNumber*10));
+						console.log((batchNumber*10)+9);
+						//for (ctr = 0; ctr < myPhotos.length; ctr++) {
+                        for (ctr = batchNumber*10; ctr < (batchNumber*10)+10; ctr++) {
+						//$("#title").text(myPhotos[ctr].title);
+						//$("#body").text(postUser[myAlbums[myPhotos[ctr].albumId - 1].userId -1].username);
+						//$("#user").text(myAlbums[myPhotos[ctr].albumId - 1].title);
+						
+                        //$("#title").text(myPosts[ctr].title); // add to Div 
+                        //$("#body").text(myPosts[ctr].body); // add to Div
+                        //$("#user").text(postUser[myPosts[ctr].userId - 1].username); // add to Div
+                        var imageSrc = myPhotos[ctr].thumbnailUrl;
+						var img = new Image();
+						img.src = imageSrc;
+						
+						$("#thumbnail").clone().appendTo("body").html(img);
+						$("#title").clone().appendTo("body").html("<h1 id = 'photoTitle'>" + myPhotos[ctr].title + "</h1>");
+						$("#body").clone().appendTo("body").html("<a href = 'ViewUserProfile.html' id = 'user'>" + postUser[myAlbums[myPhotos[ctr].albumId - 1].userId -1].username + "</a>"); 
+						$("#user").clone().appendTo("body").html("<a href = 'ViewAlbum.html' id = 'album'>" + myAlbums[myPhotos[ctr].albumId - 1].title+ "</a>");
+						
+                        //$("#title").clone().appendTo("body"); // clone Div
+                        //$("#body").clone().appendTo("body"); // clone Div
+                        //$("#user").clone().appendTo("body"); // clone Div
+						}
+						batchNumber++;
+					});
+					    
+                });
+            });
+                
+          }
+        
+        </script>
+    </head>
+    <body>
+		<div id = "thumbnail">
+        </div>
+        <div class = "head" id = "title">
+        </div>
+        <div class = "content" id = "body">
+        </div>
+        <div  class = "text" id = "user">
+        </div> 
+        <input type="submit" value="Load More" onclick="loadMore()">
+    </body>
+</html>
